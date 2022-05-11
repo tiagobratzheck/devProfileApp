@@ -56,7 +56,7 @@ export const UserName = styled.Text`
     color: ${({ theme }) => theme.colors.gray800};
 `;
 
-export const Icon = styled(Feather)`
+export const Icon = styled(Feather as any)`
     font-size: ${RFValue(28)}px;
     color: ${({ theme }) => theme.colors.dark};
 `;

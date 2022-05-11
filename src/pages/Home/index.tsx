@@ -9,6 +9,7 @@ import {
     UserInfoDetail,
     UserName,
     UserWrapper,
+    Icon
 } from "./styles";
 
 import avatarDefault from "../../assets/avatar02.png";
@@ -24,9 +25,10 @@ export const Home: React.FunctionComponent = () => {
                         </UserAvatarButton>
                         <UserInfoDetail>
                             <UserGreeting>Olá,</UserGreeting>
-                            <UserName>Jorge</UserName>
+                            <UserName>Tiago...</UserName>
                         </UserInfoDetail>
                     </UserInfo>
+                    <Icon name="power" />
                 </UserWrapper>
             </Header>
         </Container>
