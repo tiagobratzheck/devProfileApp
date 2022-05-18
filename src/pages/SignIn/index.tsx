@@ -19,7 +19,7 @@ import {
 } from "./styles";
 import logo from "../../assets/logo.png";
 import { InputControl } from "../../components/Form/inputControl";
-import { AuthContext } from "../../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 
 interface ScreenNavigationProp {
     navigate: (screen: string) => void;
@@ -35,7 +35,7 @@ const formSchema = yup.object({
 });
 
 export const SignIn: React.FunctionComponent = () => {
-    const {signIn} = useContext(AuthContext);
+    const { signIn } = useAuth();
     const [loading, setLoading] = useState(false);
     const {
         handleSubmit,
@@ -102,7 +102,9 @@ export const SignIn: React.FunctionComponent = () => {
                             }
                             onPress={handleSubmit(handleSignIn)}
                         />
-                        <ForgotPasswordButton>
+                        <ForgotPasswordButton
+                            onPress={() => navigate("ForgotPassword")}
+                        >
                             <ForgotPasswordTitle>
                                 Esqueci minha senha
                             </ForgotPasswordTitle>

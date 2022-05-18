@@ -20,6 +20,8 @@ interface ICredentials {
 interface IAuthContext {
     user: IUser;
     signIn(credentials: ICredentials): void;
+    signOut(): void;
+    updateUser(user: IUser): void;
 }
 
 // Interface do children utilizado no AuthProvider
@@ -47,6 +49,9 @@ export const AuthProvider: React.FunctionComponent<IProps> = ({ children }) => {
 
             if (token && user) {
                 setData({ token, user: JSON.parse(user) });
+                api.defaults.headers.common[
+                    "Authorization"
+                ] = `Bearer ${token}`;
             }
         }
         loadAuthData();
@@ -61,6 +66,7 @@ export const AuthProvider: React.FunctionComponent<IProps> = ({ children }) => {
             const { token, user } = response.data;
             await AsyncStorage.setItem(tokenData, token);
             await AsyncStorage.setItem(userData, JSON.stringify(user));
+            api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
             setData({ token, user });
         } catch (error) {           
             Alert.alert(
@@ -70,9 +76,33 @@ export const AuthProvider: React.FunctionComponent<IProps> = ({ children }) => {
         }
     };
 
+    const signOut = async () => {
+        await AsyncStorage.removeItem(tokenData);
+        await AsyncStorage.removeItem(userData);
+        setData({} as IAuthState);
+    };
+
+    const updateUser = async (user: IUser) => {
+        await AsyncStorage.setItem(userData, JSON.stringify(user));
+        setData({
+            user,
+            token: data.token,
+        });
+    };
+
     return (
-        <AuthContext.Provider value={{ user: data.user, signIn }}>
+        <AuthContext.Provider value={{ user: data.user, signIn, signOut, updateUser }}>
             {children}
         </AuthContext.Provider>
     );
+};
+
+export const useAuth = (): IAuthContext => {
+    const context = React.useContext(AuthContext);
+
+    if (!context) {
+        throw new Error("useAuth deve ser usado em um AuthProvider.");
+    }
+
+    return context;
 };
